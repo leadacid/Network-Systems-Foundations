@@ -112,10 +112,18 @@ class Router:
                 if int(pref[-2:]) > best_l:
                     best_l = int(pref[-2:])
                     best_prefix = pref
+        print("Best_prefix:")
         print(best_prefix)
-        
 
-
+        if(best_prefix != None):
+            v = 9999999999999999999999999
+            for r in self.rib[best_prefix]:
+                if sum(r.path) < v:
+                    v = sum(r.path)
+                    print(sum(r.path))
+                    retval = r.neighbor
+        print("Returning")
+        print(retval)
         return retval
 
 
@@ -131,14 +139,14 @@ def test_cases():
     rtr.update (Route("1.1.1.1", "10.0.0.0", 24, [3,4,5]))
     rtr.update (Route("2.2.2.2", "10.0.0.0", 24, [1,2]))
 
-    print("RIB")
-    rtr.printRIB()
+    #print("RIB")
+    #rtr.printRIB()
 
     #Test updates work - overwriting an existing route from a neighbor
     rtr.update (Route("2.2.2.2", "10.0.0.0", 24, [1, 22, 33, 44]))
 
-    print("RIB")
-    rtr.printRIB()
+    #print("RIB")
+    #rtr.printRIB()
 
     #Test updates work - an overlapping prefix (this case, a shorter prefix)
     rtr.update (Route("2.2.2.2", "10.0.0.0", 22, [4,5,7,8]))
@@ -149,6 +157,7 @@ def test_cases():
 
     print("RIB")
     rtr.printRIB()
+    print("-------------------")
 
     # Should Fail
     nh = rtr.next_hop("10.2.0.13")
@@ -157,7 +166,6 @@ def test_cases():
     nh = rtr.next_hop("10.0.0.13")
     assert nh == "1.1.1.1"
 
-    """""
     # Test withdraw - withdraw the route from 1.1.1.1 that we just matched
     rtr.withdraw (Route("1.1.1.1", "10.0.0.0", 24, [3,4,5]))
 
@@ -193,7 +201,6 @@ def test_cases():
     rtr.withdraw(Route("1.1.1.1", "20.0.12.0", 24, [44,55,66,77,88]))
     nh = rtr.next_hop("20.0.12.0")
     assert nh == "2.2.2.2"
-"""
 
 if __name__ == "__main__":
     test_cases()
