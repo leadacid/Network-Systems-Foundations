@@ -118,9 +118,10 @@ class Router:
         if(best_prefix != None):
             v = 100
             for r in self.rib[best_prefix]:
-                if len(r.path) < v:
-                    v = len(r.path)
-                    print(len(r.path))
+                cost = len(r.path)
+                if cost < v:
+                    v = cost
+                    print(cost)
                     retval = r.neighbor
         print("Returning")
         print(retval)
