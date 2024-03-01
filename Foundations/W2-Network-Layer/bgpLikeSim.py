@@ -116,11 +116,11 @@ class Router:
         print(best_prefix)
 
         if(best_prefix != None):
-            v = 9999999999999999999999999
+            v = 100
             for r in self.rib[best_prefix]:
-                if sum(r.path) < v:
-                    v = sum(r.path)
-                    print(sum(r.path))
+                if len(r.path) < v:
+                    v = len(r.path)
+                    print(len(r.path))
                     retval = r.neighbor
         print("Returning")
         print(retval)
@@ -160,9 +160,11 @@ def test_cases():
     print("-------------------")
 
     # Should Fail
+    print("One")
     nh = rtr.next_hop("10.2.0.13")
     assert nh == None
 
+    print("Two")
     nh = rtr.next_hop("10.0.0.13")
     assert nh == "1.1.1.1"
 
@@ -170,6 +172,8 @@ def test_cases():
     rtr.withdraw (Route("1.1.1.1", "10.0.0.0", 24, [3,4,5]))
 
     # Should match something different
+
+    print("Three")
     nh = rtr.next_hop("10.0.0.13")
     assert nh == "2.2.2.2"
 
@@ -177,20 +181,24 @@ def test_cases():
     rtr.withdraw (Route("1.1.1.1", "10.0.0.0", 24, [3,4,5]))
 
     
+    print("Four")
     rtr.update (Route("2.2.2.2", "10.0.0.0", 22, [4,5,7,8]))
     # Should match 10.0.0.0/22 (next hop 2.2.2.2) but not 10.0.0.0/24 (next hop 1.1.1.1)
     nh = rtr.next_hop("10.0.1.77")
     assert nh == "2.2.2.2"
 
+    print("Five")
     # Test a different prefix
     nh = rtr.next_hop("12.0.12.0")
     assert nh == "2.2.2.2"
 
+    print("Six")
     rtr.update (Route("1.1.1.1", "20.0.0.0", 16, [4,5,7,8]))
     rtr.update (Route("2.2.2.2", "20.0.0.0", 16, [44,55]))
     nh = rtr.next_hop("20.0.12.0")
     assert nh == "2.2.2.2"
 
+    print("Seven")
     rtr.update (Route("1.1.1.1", "20.0.12.0", 24, [44,55,66,77,88]))
     nh = rtr.next_hop("20.0.12.0")
     assert nh == "1.1.1.1"
