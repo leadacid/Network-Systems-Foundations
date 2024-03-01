@@ -5,7 +5,7 @@
 #   withdraw(rt) - rt is type Route. If a simplified BGP router gets this message, it will   
 #
 
-from ipaddress import IPv4Network
+import ipaddress
 
 class Route:
     # A prefix is in form 
@@ -99,20 +99,21 @@ class Router:
         return a+b+c+d
 
 
-
     # ipaddr in a.b.c.d format
     # find longest prefix that matches
     # then find shortest path of routes for that prefix
     def next_hop(self, ipaddr):
         retval = None
+        best_prefix = None
+        best_l = 0
 
-        if ipaddr == "10.2.0.13":
-            pass
-        elif ipaddr == "10.0.0.13":
-            retval = "1.1.1.1"
+        for pref in self.rib.keys():
+            if ipaddress.ip_address(ipaddr) in ipaddress.ip_network(pref):
+                if pref[-2:] > best_l:
+                    best_prefix = pref
+        print(best_prefix)
+        
 
-        else:
-            retval = "2.2.2.2"
 
         return retval
 
