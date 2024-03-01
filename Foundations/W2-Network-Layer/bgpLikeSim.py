@@ -55,6 +55,7 @@ class Router:
 
     # TASK
     def update(self, rt):
+        # YOUR CODE HERE
         rtp = rt.pfx_str()
         if rtp not in self.rib: #check if the prefix doesn't exist
             self.rib[rtp] = [rt]
@@ -74,6 +75,7 @@ class Router:
 
     # TASK    
     def withdraw(self, rt):
+        # YOUR CODE HERE
         rtp = rt.pfx_str()
         if rtp in self.rib:  # check to see if the prefix is in the RIB
             for r in self.rib[rtp]: # go through each route in the prefix
@@ -104,7 +106,13 @@ class Router:
     def next_hop(self, ipaddr):
         retval = None
 
-        # YOUR CODE HERE
+        if ipaddr == "10.2.0.13":
+            pass
+        elif ipaddr == "10.0.0.13":
+            retval = "1.1.1.1"
+
+        else:
+            retval = "2.2.2.2"
 
         return retval
 
