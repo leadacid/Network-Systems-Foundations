@@ -37,25 +37,25 @@ class FlowTracking:
 def readHandShake(pcap):
    # read syn
    p = pcap.pop(0);
-   seqInit = p[TCP].seq;
-   srcInit = p[IP].src;
-   dstInit = p[IP].dst;
+   seqInit = p['TCP'].seq;
+   srcInit = p['IP'].src;
+   dstInit = p['IP'].dst;
 
    # read ack
    p = pcap.pop(0);
-   if (p[TCP].ack != seqInit+1):
-      print(string("ERROR: seq="+seqInit+", ack="+p[TCP].ack ));
-   if (p[IP].src != dstInit or p[IP].dst != srcInit):
-      print(string("ERROR: srcInit="+srcInit+", destInit="+dstInit+"Resp: src="+p[IP].src+",dst="+p[IP].dst ));
+   if (p['TCP'].ack != seqInit+1):
+      print(string("ERROR: seq="+seqInit+", ack="+p['TCP'].ack ));
+   if (p['IP'].src != dstInit or p['IP'].dst != srcInit):
+      print(string("ERROR: srcInit="+srcInit+", destInit="+dstInit+"Resp: src="+p['IP'].src+",dst="+p['IP'].dst ));
 
-   seqOther = p[TCP].seq
+   seqOther = p['TCP'].seq
 
    # read synack
    p = pcap.pop(0);
-   if (p[TCP].ack != seqOther+1):
-      print(string("ERROR: seq="+seqInit+", ack="+p[TCP].ack ));
-   if (p[IP].src != srcInit or p[IP].dst != dstInit):
-      print(string("ERROR: srcInit="+srcInit+", destInit="+dstInit+"Resp: src="+p[IP].src+",dst="+p[IP].dst ));
+   if (p['TCP'].ack != seqOther+1):
+      print(string("ERROR: seq="+seqInit+", ack="+p['TCP'].ack ));
+   if (p['IP'].src != srcInit or p['IP'].dst != dstInit):
+      print(string("ERROR: srcInit="+srcInit+", destInit="+dstInit+"Resp: src="+p['IP'].src+",dst="+p['IP'].dst ));
 
    return FlowTracking(seqOther, seqOther+1, dstInit, srcInit)
 
@@ -63,7 +63,7 @@ def readHandShake(pcap):
 # Returns true if the packet p is in the direction of the unidirectional
 # flow represented by f (FlowTracking)
 def isFlowEgress(p, f):
-   if (p[IP].src == f.srcIP):
+   if (p['IP'].src == f.srcIP):
       return True
    return False
 
