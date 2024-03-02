@@ -99,7 +99,7 @@ def findMaxBytesInFlight(pcapfile):
       if pkt['TCP'].flags == "PA":
          count += 1
          continue
-
+         
       #print(pkt['TCP'].flags)
       if isFlowEgress(pkt, flow):
          if pkt.seq > flow.highestSeqNum:
