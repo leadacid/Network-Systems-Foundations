@@ -99,9 +99,9 @@ class Router:
         best_prefix = None
         best_l = 0
 
-        for pref in self.rib.keys():
-            if ipaddress.ip_address(ipaddr) in ipaddress.ip_network(pref):
-                if int(pref[-2:]) > best_l:
+        for pref in self.rib.keys():   # Loop through each prefix in the rib
+            if ipaddress.ip_address(ipaddr) in ipaddress.ip_network(pref):  # Check to see if ipadress fits in prefix net
+                if int(pref[-2:]) > best_l:     # There maybe multiple candidates so we choose the highest prefix
                     best_l = int(pref[-2:])
                     best_prefix = pref
         print("Best_prefix:")
