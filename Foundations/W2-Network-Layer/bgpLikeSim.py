@@ -64,7 +64,7 @@ class Router:
                 if r.neighbor == rt.neighbor:
                     self.rib[rtp][c] = rt
                     break
-                else:
+                else: # neighbord not in prefix, we append route
                     if c == len(self.rib[rtp]) - 1:
                         self.rib[rtp].append(rt)
 
