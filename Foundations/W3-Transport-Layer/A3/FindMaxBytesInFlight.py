@@ -96,6 +96,10 @@ def findMaxBytesInFlight(pcapfile):
          if pkt['TCP'].flags != "PA":
             print(pkt['TCP'].flags)
 
+      if pkt['TCP'].flags == "":   
+         print("EMPTY!")
+         continue
+         
       if pkt['TCP'].flags == "PA":
          count += 1
          continue
