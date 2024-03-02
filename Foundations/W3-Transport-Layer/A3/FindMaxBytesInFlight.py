@@ -30,6 +30,7 @@ class FlowTracking:
         self.pktLenOfHighestSeqNumPacket = 0;
         self.srcIP = srcIP;
         self.dstIP = dstIP; 
+      
 
 # Returns FlowTracking object for the server side 
 # (client sends the syn, server sends the synack, client sends ack)
@@ -77,17 +78,54 @@ def findMaxBytesInFlight(pcapfile):
    maxBytesInFlight = 0 
 
    # YOUR CODE HERE
+   pkts = rdpcap(pcapfile)
+   flow = readHandShake(pkts)
+   count = 0
+   """
+   for pkt in pkts:
+      
+      if isFlowEgress(pkt, flow):
+         if "PA" in str(pkt):
+            print("PA")
 
+            count += 1
+         elif "FA" in str(pkt):
+            #print("FA")
+            #print(pkt[TCP])
+            #pkt.show()
+            print(pkt[TCP].seq)
+            print(pkt[TCP].ack)
+            maxBytesInFlight = abs(pkt[TCP].seq - pkt[TCP].ack)
+         elif " A" in str(pkt):
+            pass
+         else:
+            #print(str(pkt))
+            pass
+         """
+   pkts[0].show()
+   #print("#####")
+   seq = 0
+   ack = 0
+   for pkt in pkts:
+       if isFlowEgress(pkt, flow):
+         if pkt[TCP].seq > seq:
+            seq = pkt[TCP].seq
+         if pkt[TCP].ack > ack:
+            ack = pkt[TCP].ack
+   print(seq,ack)
+   print(flow.startSeqNum, flow.ackNumReceived)
+
+  
+#40 and 52128
    return maxBytesInFlight
-
 
 
 if __name__ == '__main__':
    # pcap is a server side capture
    maxBytesInFlight = findMaxBytesInFlight("simple-tcp-session.pcap")
-   print("Max: " + str(maxBytesInFlight))
-   print()
+   #print("Max: " + str(maxBytesInFlight))
+   #print()
 
-   maxBytesInFlight = findMaxBytesInFlight("out_10m_0p.pcap")
-   print("Max: " + str(maxBytesInFlight))
-   print()
+   #maxBytesInFlight = findMaxBytesInFlight("out_10m_0p.pcap")
+   #print("Max: " + str(maxBytesInFlight))
+   #print()
