@@ -81,42 +81,53 @@ def findMaxBytesInFlight(pcapfile):
    pkts = rdpcap(pcapfile)
    flow = readHandShake(pkts)
    count = 0
-   """
-   for pkt in pkts:
-      
-      if isFlowEgress(pkt, flow):
-         if "PA" in str(pkt):
-            print("PA")
 
-            count += 1
-         elif "FA" in str(pkt):
-            #print("FA")
-            #print(pkt[TCP])
-            #pkt.show()
-            print(pkt[TCP].seq)
-            print(pkt[TCP].ack)
-            maxBytesInFlight = abs(pkt[TCP].seq - pkt[TCP].ack)
-         elif " A" in str(pkt):
-            pass
-         else:
-            #print(str(pkt))
-            pass
-         """
-   pkts[0].show()
-   #print("#####")
-   seq = 0
-   ack = 0
+
+# This class captures some information about a unidirectional flow
+# startSeqNum - the starting TCP sequence number for data sent in this flow
+# ackNumReceived - tracks the highest acknowledgement number received
+# highestSeqNum - for data sent, this holds the highest sequence number seen
+# pktLenOfHighestSeqNumPacket - for the packet that was the highestSeqNum, this is the length of that packet
+# srcIP - the IP address for the source in this flow (the one sending data and the seq num refers to)
+# destIP - the IP address for the destination in this flow
+   
    for pkt in pkts:
-       if isFlowEgress(pkt, flow):
-         if pkt[TCP].seq > seq:
-            seq = pkt[TCP].seq
-         if pkt[TCP].ack > ack:
-            ack = pkt[TCP].ack
-   print(seq,ack)
-   print(flow.startSeqNum, flow.ackNumReceived)
+      if pkt['TCP'].flags == "F":
+         count += 1
+         continue
+      if pkt['TCP'].flags == "FA":
+         count += 1
+         continue
+      elif pkt['TCP'].flags == "PA":
+         count += 1
+         continue
+         #print(pkt['TCP'].flags)
+      else:
+         if pkt['TCP'].flags != "A":
+            print(pkt['TCP'].flags)
+      #print(pkt['TCP'].flags)
+      if isFlowEgress(pkt, flow):
+         if pkt.seq > flow.highestSeqNum:
+            flow.highestSeqNum = pkt.seq
+            #print(pkt.seq)
+            flow.pktLenOfHighestSeqNumPacket = pkt.len
+      else:
+         if pkt.ack > flow.ackNumReceived:
+            flow.ackNumReceived = pkt.ack
+            #print(pkt.ack)
+
+   print("-----")
+   print(flow.highestSeqNum, flow.ackNumReceived, flow.pktLenOfHighestSeqNumPacket)
+   print(count)
+   print((abs(flow.highestSeqNum - flow.ackNumReceived - count))* flow.pktLenOfHighestSeqNumPacket)
+
+   #pkts[0].show()
+
+   
+        
 
   
-#40 and 52128
+   #40 and 52128
    return maxBytesInFlight
 
 
@@ -126,6 +137,6 @@ if __name__ == '__main__':
    #print("Max: " + str(maxBytesInFlight))
    #print()
 
-   #maxBytesInFlight = findMaxBytesInFlight("out_10m_0p.pcap")
+   maxBytesInFlight = findMaxBytesInFlight("out_10m_0p.pcap")
    #print("Max: " + str(maxBytesInFlight))
    #print()
