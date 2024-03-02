@@ -89,7 +89,8 @@ class Router:
         else:
             pass
         return 
-    
+
+ """"
     def convertToBinaryString(self, ip):
         vals = ip.split(".")
         a = format(int(vals[0]), 'b').rjust(8, '0')
@@ -97,7 +98,7 @@ class Router:
         c = format(int(vals[2]), 'b').rjust(8, '0')
         d = format(int(vals[3]), 'b').rjust(8, '0')
         return a+b+c+d
-
+"""
 
     # ipaddr in a.b.c.d format
     # find longest prefix that matches
