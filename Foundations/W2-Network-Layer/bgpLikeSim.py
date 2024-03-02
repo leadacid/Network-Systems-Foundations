@@ -107,10 +107,10 @@ class Router:
         print("Best_prefix:")
         print(best_prefix)
 
-        if(best_prefix != None):
+        if(best_prefix != None):         # There maybe a case where there is no route possible    
             v = 100
             for r in self.rib[best_prefix]:
-                cost = len(r.path)
+                cost = len(r.path)          # Weights are 0, so no need to implement OSPF, number of hops is enough for this sim
                 if cost < v:
                     v = cost
                     print(cost)
