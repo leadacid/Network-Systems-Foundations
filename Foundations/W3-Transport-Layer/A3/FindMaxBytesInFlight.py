@@ -92,19 +92,14 @@ def findMaxBytesInFlight(pcapfile):
 # destIP - the IP address for the destination in this flow
    
    for pkt in pkts:
-      if pkt['TCP'].flags == "F":
-         count += 1
-         continue
-      if pkt['TCP'].flags == "FA":
-         count += 1
-         continue
-      elif pkt['TCP'].flags == "PA":
-         count += 1
-         continue
-         #print(pkt['TCP'].flags)
-      else:
-         if pkt['TCP'].flags != "A":
+      if pkt['TCP'].flags != "A":
+         if pkt['TCP'].flags != "PA":
             print(pkt['TCP'].flags)
+
+      if pkt['TCP'].flags == "PA":
+         count += 1
+         continue
+
       #print(pkt['TCP'].flags)
       if isFlowEgress(pkt, flow):
          if pkt.seq > flow.highestSeqNum:
